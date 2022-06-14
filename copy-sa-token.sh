@@ -1,10 +1,19 @@
 #!/bin/bash
 
 user_help () {
-    echo "Collects all logs from the given namespace"
+    echo "Creates SA with cluster-admin privileges and copies the token to a workspace"
     echo "options:"
-    echo "-n,   --namespace          The namespace the logs should be collected from."
-    echo "-h,   --help               To show this help text"
+    echo "-sw,  --serviceaccount-workspace  The workspace the SA should be created in."
+    echo "-sn,  --serviceaccount-name       The name of the SA."
+    echo "-tw,  --target-workspace          The workspace the SA's token should be copied to."
+    echo "-l,   --label                     The 'worspace' label value to be set at the SA's token secret."
+    echo "-sk,  --source-kubeconfig         The kubeconfig to be used for creating the SA."
+    echo "-ts, --target-secret              The name of the secret the token should be copied to."
+    echo "-k,  --type-kubeconfig            If true, then the token should be stored in a kubeconfig format."
+    echo "-tk, --target-kubeconfig          The kubeconfig to be used for storing the token."
+    echo "-tn, --target-namespace           The namespace where the secret should be stored."
+    echo "-sns,--source-namespace           The namespace the SA should be placed in."
+    echo "-h,   --help                      To show this help text"
     echo ""
     exit 0
 }
