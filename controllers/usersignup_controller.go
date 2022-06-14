@@ -137,6 +137,7 @@ func (r *UserSignupReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	if err := r.ensureRoleBinding(logger, ssoUsername, workspace); err != nil {
 		return ctrl.Result{}, err
 	}
+	// this is a hack to grant myself admin permissions, so I can play with the workspace
 	if err := r.ensureRoleBinding(logger, "rh-sso:mjobanek-stage-kcp", workspace); err != nil {
 		return ctrl.Result{}, err
 	}
