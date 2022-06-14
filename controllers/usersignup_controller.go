@@ -19,11 +19,14 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/codeready-toolchain/api/api/v1alpha1"
 	commonCondition "github.com/codeready-toolchain/toolchain-common/pkg/condition"
+	"github.com/codeready-toolchain/toolchain-common/pkg/states"
 	v1alpha12 "github.com/kcp-dev/kcp/pkg/apis/tenancy/v1alpha1"
 	tenancyv1beta1 "github.com/kcp-dev/kcp/pkg/apis/tenancy/v1beta1"
+	"github.com/redhat-cop/operator-utils/pkg/util"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -94,7 +97,33 @@ func (r *UserSignupReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		return reconcile.Result{}, err
 	}
 	logger = logger.WithValues("username", userSignup.Spec.Username)
+	if !states.Approved(userSignup) {
+		logger.Info("user is not approved")
+		return reconcile.Result{}, nil
+	}
 	ssoUsername := fmt.Sprintf("rh-sso:%s", userSignup.Spec.Username)
+
+	if util.IsBeingDeleted(userSignup) {
+		logger.Info("usersignup is being deleted")
+		deleted, err := r.deleteClusterWorkspace(logger, userSignup)
+		if deleted || err != nil {
+			return ctrl.Result{
+				Requeue:      true,
+				RequeueAfter: time.Second,
+			}, err
+		}
+		util.RemoveFinalizer(userSignup, v1alpha1.FinalizerName)
+		if err := r.Client.Update(context.TODO(), userSignup); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
+	if !util.HasFinalizer(userSignup, v1alpha1.FinalizerName) {
+		util.AddFinalizer(userSignup, v1alpha1.FinalizerName)
+		if err := r.Client.Update(context.TODO(), userSignup); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 
 	workspace, created, err := r.ensureClusterWorkspace(logger, userSignup)
 	if created || err != nil {
@@ -114,10 +143,32 @@ func (r *UserSignupReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 	if workspace.Status.Phase != v1alpha12.ClusterWorkspacePhaseReady || workspace.Status.BaseURL == "" {
 		logger.Info("workspace is not ready yet")
-		return ctrl.Result{}, nil
+		return ctrl.Result{
+			Requeue:      true,
+			RequeueAfter: time.Second,
+		}, nil
 	}
 	logger.Info("workspace is ready")
 	return ctrl.Result{}, updateCompleteStatus(r.Client, userSignup, workspace.Status.BaseURL)
+}
+
+func (r *UserSignupReconciler) deleteClusterWorkspace(logger klog.Logger, userSignup *v1alpha1.UserSignup) (bool, error) {
+	logger.Info("getting clusterworkspace")
+	workspace := &v1alpha12.ClusterWorkspace{}
+	err := r.OrgCluster.GetClient().Get(context.TODO(), types.NamespacedName{Name: userSignup.Name}, workspace)
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return false, err
+		}
+		logger.Info("ClusterWorkspace is gone")
+		return false, nil
+	}
+	if util.IsBeingDeleted(workspace) {
+		logger.Info("ClusterWorkspace is being deleted")
+		return false, nil
+	}
+	logger.Info("ClusterWorkspace was deleted")
+	return true, r.OrgCluster.GetClient().Delete(context.TODO(), workspace)
 }
 
 func (r *UserSignupReconciler) ensureClusterWorkspace(logger klog.Logger, userSignup *v1alpha1.UserSignup) (*v1alpha12.ClusterWorkspace, bool, error) {
@@ -276,7 +327,7 @@ func updateCompleteStatus(cl client.Client, userSignup *v1alpha1.UserSignup, url
 		v1alpha1.Condition{
 			Type:    v1alpha1.UserSignupApproved,
 			Status:  corev1.ConditionTrue,
-			Reason:  v1alpha1.UserSignupApprovedAutomaticallyReason,
+			Reason:  v1alpha1.UserSignupApprovedByAdminReason,
 			Message: "",
 		})
 
