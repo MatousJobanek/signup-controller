@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/codeready-toolchain/api v0.0.0-20220428144214-2de3d242bdf9
 	github.com/codeready-toolchain/toolchain-common v0.0.0-20220504113537-d899cb88636e
-	github.com/kcp-dev/kcp v0.4.0-alpha.0
+	github.com/kcp-dev/kcp/pkg/apis v0.5.0-alpha.1.0.20220705093549-8831a2ff4d8c
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.17.0
 	github.com/redhat-cop/operator-utils v1.3.3-0.20220121120056-862ef22b8cdf
@@ -54,7 +54,7 @@ require (
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kcp-dev/apimachinery v0.0.0-20220510201200-14829f4168cd // indirect
+	github.com/kcp-dev/logicalcluster v1.1.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/mitchellh/copystructure v1.0.0 // indirect
@@ -97,4 +97,4 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace github.com/kcp-dev/kcp => github.com/MatousJobanek/kcp v0.4.0-alpha.0-api
+replace github.com/codeready-toolchain/api => ../api

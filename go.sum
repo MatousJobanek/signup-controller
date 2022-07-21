@@ -73,8 +73,6 @@ github.com/Masterminds/semver/v3 v3.1.1 h1:hLg3sBzpNErnxhQtUy/mmLR2I9foDujNK030I
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
 github.com/Masterminds/sprig/v3 v3.2.2 h1:17jRggJu518dr3QaafizSXOjKYp94wKfABxUmyxvxX8=
 github.com/Masterminds/sprig/v3 v3.2.2/go.mod h1:UoaO7Yp8KlPnJIYWTFkMaqPUYKTfGFPhxNuwnnxkKlk=
-github.com/MatousJobanek/kcp v0.4.0-alpha.0-api h1:vO2xm5ILBrPZ6jMULllJ1aNfDMEdCOIJl6y8y70TGH0=
-github.com/MatousJobanek/kcp v0.4.0-alpha.0-api/go.mod h1:ZXBBruNXenluLO4dNzCWWV5woIjnFPH/QtasNFP5d0M=
 github.com/NYTimes/gziphandler v0.0.0-20170623195520-56545f4a5d46/go.mod h1:3wb06e3pkSAbeQ52E9H9iFoQsEEwGN64994WTCIhntQ=
 github.com/NYTimes/gziphandler v1.1.1/go.mod h1:n/CVRwUEOgIxrgPvAQhUUr9oeUtvrhMomdKFjzJNB0c=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
@@ -132,9 +130,6 @@ github.com/cockroachdb/datadriven v0.0.0-20190809214429-80d97fb3cbaa/go.mod h1:z
 github.com/cockroachdb/datadriven v0.0.0-20200714090401-bf6692d28da5/go.mod h1:h6jFvWxBdQXxjopDMZyH2UVceIRfR84bdzbkoKrsWNo=
 github.com/cockroachdb/errors v1.2.4/go.mod h1:rQD95gz6FARkaKkQXUksEje/d9a6wBJoCr5oaCLELYA=
 github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f/go.mod h1:i/u985jwjWRlyHXQbwatDASoW0RMlZ/3i9yJHE2xLkI=
-github.com/codeready-toolchain/api v0.0.0-20220407172226-5247322e920d/go.mod h1:yxINrgni3bMTyGKMjMaLmWwgwZt/P+WT09c/pIMP02w=
-github.com/codeready-toolchain/api v0.0.0-20220428144214-2de3d242bdf9 h1:XqLmqOcY6M4d5c6aOUU9c1MEPP+5HG+hf/k73fVKzsg=
-github.com/codeready-toolchain/api v0.0.0-20220428144214-2de3d242bdf9/go.mod h1:yxINrgni3bMTyGKMjMaLmWwgwZt/P+WT09c/pIMP02w=
 github.com/codeready-toolchain/toolchain-common v0.0.0-20220504113537-d899cb88636e h1:7lwgIvyN9ooLTpqbmnzAno4yb0QNEAHaFsMviLInaXs=
 github.com/codeready-toolchain/toolchain-common v0.0.0-20220504113537-d899cb88636e/go.mod h1:cUo/39yF9vBIUlgnVdSFe6l9QTigPnXDvbToKgWRxAc=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
@@ -462,9 +457,10 @@ github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/X
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
-github.com/kcp-dev/apimachinery v0.0.0-20220510201200-14829f4168cd h1:BU2EnCEJNdO9A7aQhh05rwiSxeoN8J/8ogzlUZy5QQg=
-github.com/kcp-dev/apimachinery v0.0.0-20220510201200-14829f4168cd/go.mod h1:rFBFy1NSLObokx2w7jWEM/B96zRId25CYL/b9N2BT2s=
-github.com/kcp-dev/logicalcluster v1.0.0/go.mod h1:M0CBFkJTW29XtIP5XIkDfhYQ8LU6HrnseRb4zmgBltE=
+github.com/kcp-dev/kcp/pkg/apis v0.5.0-alpha.1.0.20220705093549-8831a2ff4d8c h1:D8U46+l8S7PsEQaK2Is1mKEMKm3jXJ7w+TZtrB3HPn0=
+github.com/kcp-dev/kcp/pkg/apis v0.5.0-alpha.1.0.20220705093549-8831a2ff4d8c/go.mod h1:EE504kOQyojYIFCJvt59kOVoC+n8ZgCRHhzcC/4iIWI=
+github.com/kcp-dev/logicalcluster v1.1.0 h1:PJEMzKHGYcyXjHVxIR5G5M21hHhyL5XF0+HiFRpRXPE=
+github.com/kcp-dev/logicalcluster v1.1.0/go.mod h1:M0CBFkJTW29XtIP5XIkDfhYQ8LU6HrnseRb4zmgBltE=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
 github.com/kisielk/errcheck v1.2.0/go.mod h1:/BMXB+zMLi60iA8Vv6Ksmxu/1UDYcXs4uQLJ+jE2L00=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=

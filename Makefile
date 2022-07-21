@@ -113,6 +113,7 @@ podman-build: build ## Build docker image with the manager.
 .PHONY: podman-push
 podman-push: podman-build ## Push docker image with the manager.
 	podman push ${IMG}
+	kubectl delete pods -A -l control-plane=controller-manager
 
 ##@ Deployment
 
@@ -132,6 +133,7 @@ uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified 
 deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/default | kubectl apply -f -
+
 
 .PHONY: undeploy
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config. Call with ignore-not-found=true to ignore resource not found errors during deletion.
@@ -172,6 +174,7 @@ bundle: manifests kustomize ## Generate bundle manifests and metadata, then vali
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
 	mkdir "deploy" || true
 	$(KUSTOMIZE) build config/manifests > deploy/manager.yaml # | operator-sdk generate bundle -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
+	cat config/crd/bases/* >> deploy/manager.yaml
 	operator-sdk bundle validate ./bundle
 
 .PHONY: bundle-build

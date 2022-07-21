@@ -22,14 +22,10 @@ import (
 	"os"
 
 	"github.com/codeready-toolchain/api/api/v1alpha1"
-	"github.com/codeready-toolchain/signup-controller/pkg/workspace"
 	v1alpha12 "github.com/kcp-dev/kcp/pkg/apis/tenancy/v1alpha1"
 	"github.com/kcp-dev/kcp/pkg/apis/tenancy/v1beta1"
 	"go.uber.org/zap/zapcore"
 	"k8s.io/klog/v2"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/cluster"
-
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
@@ -96,12 +92,12 @@ func main() {
 		setupLog.Error(err, "Failed to get watch namespace")
 		os.Exit(1)
 	}
-	fmt.Println(namespace)
 
 	cfg := ctrl.GetConfigOrDie()
+	fmt.Println(cfg.Host, namespace)
 	mgr, err := ctrl.NewManager(cfg, ctrl.Options{
-		Scheme: scheme,
-		//MetricsBindAddress:     metricsAddr,
+		Scheme:                 scheme,
+		MetricsBindAddress:     metricsAddr,
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
@@ -112,44 +108,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	// create client that will be used for retrieving the host operator secret & ToolchainCluster CRs
-	cl, err := client.New(cfg, client.Options{
-		Scheme: scheme,
-	})
-	if err != nil {
-		setupLog.Error(err, "unable to create a client")
-		os.Exit(1)
-	}
-
-	orgConfigs, err := workspace.GetWorkspaceConfigs(cl, namespace, client.MatchingLabels{
-		"workspace": "org",
-	})
-	if err != nil {
-		setupLog.Error(err, "unable to get org level SA credentials")
-		os.Exit(1)
-	}
-	if len(orgConfigs) == 0 {
-		setupLog.Error(nil, "no org level config found")
-		os.Exit(1)
-	}
-
-	orgCluster, err := cluster.New(orgConfigs[0].Config, func(options *cluster.Options) {
-		options.Scheme = scheme
-	})
-	if err != nil {
-		setupLog.Error(err, "unable to create org cluster")
-		os.Exit(1)
-	}
-	if err := mgr.Add(orgCluster); err != nil {
-		setupLog.Error(err, "unable to add org cluster")
-		os.Exit(1)
-	}
-
 	if err = (&controllers.UserSignupReconciler{
-		Client:     mgr.GetClient(),
-		Scheme:     mgr.GetScheme(),
-		OrgCluster: orgCluster,
-		Namespace:  namespace,
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		Host:   cfg.Host,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ClusterWorkspace")
 		os.Exit(1)
